@@ -1,37 +1,44 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
 
+from app.tools.metadata import ToolMetadata
+from app.tools.schema import ToolSchema
+
 
 class BaseTool(ABC):
-    """
-    所有研究工具的统一基础接口。
-
-    Tool 只负责：
-    1. 接收结构化参数
-    2. 执行数据获取或计算
-    3. 返回结构化结果
-
-    Tool 不负责：
-    - 理解用户问题
-    - 制定研究计划
-    - 生成最终回答
-    """
 
     name: str = ""
+
     description: str = ""
+
+    @property
+    def metadata(self) -> ToolMetadata:
+        return ToolMetadata(
+            name=self.name,
+            description=self.description,
+        )
+
+    @property
+    def schema(self) -> ToolSchema:
+        metadata = self.metadata
+
+        return ToolSchema(
+            name=metadata.name,
+            description=metadata.description,
+            inputs=metadata.inputs,
+            outputs=metadata.outputs,
+            dependencies=metadata.dependencies,
+            category=metadata.category,
+            tags=metadata.tags,
+            realtime=metadata.realtime,
+            historical=metadata.historical,
+            enabled=metadata.enabled,
+        )
 
     @abstractmethod
     def execute(
         self,
-        params: Dict[str, Any]
+        params: Dict[str, Any],
     ) -> Dict[str, Any]:
-        """
-        执行 Tool。
 
-        params:
-            工具需要的参数
-
-        return:
-            结构化结果
-        """
         raise NotImplementedError

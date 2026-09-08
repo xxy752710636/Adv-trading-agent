@@ -34,6 +34,16 @@ def build_tool_registry() -> ToolRegistry:
         TechnicalIndicatorsTool(),
     )
 
+    print("\n========== TOOL CATALOG ==========")
+
+    for metadata in registry.list_metadata():
+        print(
+            f"{metadata.name} | "
+            f"category={metadata.category} | "
+            f"realtime={metadata.realtime} | "
+            f"historical={metadata.historical}"
+        )
+
     return registry
 
 
